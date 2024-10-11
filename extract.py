@@ -1,4 +1,5 @@
 from flask import Flask, request, send_from_directory
+import os
 
 app = Flask(__name__)
 
@@ -32,6 +33,17 @@ def extract_yt_audio():
     except:
         print('Error fetching url')
     if stream:
+        directory_name = 'output'
+        try:
+            os.mkdir(directory_name)
+            print(f"Directory '{directory_name}' created successfully.")
+        except FileExistsError:
+            print(f"Directory '{directory_name}' already exists.")
+        except PermissionError:
+            print(f"Permission denied: Unable to create '{directory_name}'.")
+        except Exception as e:
+            print(f"An error occurred: {e}")
+
         try:
             filepath = f'./output/{stream.default_filename}'
             stream.download(filename=filepath)
